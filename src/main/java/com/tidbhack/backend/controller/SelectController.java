@@ -1,5 +1,6 @@
 package com.tidbhack.backend.controller;
 
+import com.tidbhack.backend.domain.Node;
 import com.tidbhack.backend.dto.Statement;
 import com.tidbhack.backend.service.ExplainService;
 import io.swagger.annotations.Api;
@@ -24,13 +25,13 @@ public class SelectController {
 
     @RequestMapping(value = "/select", method = RequestMethod.POST)
     @ApiOperation(value = "select 语句执行接口", notes = "select 语句执行接口")
-    public String select(
+    public Node select(
             @ApiParam(value = "执行语句", required = true)
             @RequestBody Statement statement
 
     ) {
 
-        String result = explainService.explain(statement.getSql());
+        Node result = explainService.explain(statement.getSql());
         return result;
     }
 }
