@@ -1,6 +1,7 @@
 package com.tidbhack.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tidbhack.backend.utils.FormatStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,8 @@ public class Node {
     private Info info;
 
     public Node(String name, String task, String count, String operatorinfo, String executeinfo) {
-        this.name = name;
         this.layer = getRowLayer(name);
+        this.name = FormatStringUtils.formatJsonName(name);
         this.info = new Info();
         this.info.setCount(count);
         this.info.setTask(task);

@@ -4,6 +4,7 @@ import com.tidbhack.backend.domain.Node;
 import com.tidbhack.backend.dto.Response;
 import com.tidbhack.backend.dto.Statement;
 import com.tidbhack.backend.service.ExplainService;
+import com.tidbhack.backend.utils.FormatSqlUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -35,5 +36,15 @@ public class SelectController {
         Response res = explainService.explain(statement.getSql());
 
         return res;
+    }
+
+    @RequestMapping(value = "/formatsql", method = RequestMethod.POST)
+    @ApiOperation(value = "获取格式化后的SQL", notes = "获取格式化后的SQL")
+
+    public String formatSql(
+            @ApiParam(value = "执行语句", required = true)
+            @RequestBody Statement statement
+    ) {
+        return FormatSqlUtils.getFormatSql(statement.getSql());
     }
 }
