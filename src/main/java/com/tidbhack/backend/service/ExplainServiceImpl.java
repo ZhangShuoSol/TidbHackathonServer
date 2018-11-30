@@ -1,27 +1,26 @@
-package com.tidbhack.backend.datasource;
+package com.tidbhack.backend.service;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.tidbhack.backend.datasource.Explain;
+import com.tidbhack.backend.datasource.ExplainRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by wenbinsong on 2018/11/30.
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class ExplainTest {
+@Service
+public class ExplainServiceImpl implements ExplainService {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    @Test
-    public void Test123() {
-        List<Explain> explainList = jdbcTemplate.query("explain ANALYZE select * from testlib join t1 on testlib.id = t1.id;", new ExplainRowMapper());
+    @Override
+    public String explain(String sql) {
+        List<Explain> explainList = jdbcTemplate.query(sql, new ExplainRowMapper());
+
         for (Explain explain: explainList) {
             System.out.println(explain.getId());
             System.out.println(explain.getCount());
@@ -29,6 +28,7 @@ public class ExplainTest {
             System.out.println(explain.getOperator_info());
             System.out.println(explain.getExecution_info());
         }
-    }
 
+        return "";
+    }
 }
