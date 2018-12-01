@@ -83,4 +83,12 @@ public class Node {
     public void setInfo(Info info) {
         this.info = info;
     }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 }
