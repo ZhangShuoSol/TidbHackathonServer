@@ -15,8 +15,10 @@ public class Node {
     private List<Node> nodes;
     private Node parent;
     private Info info;
+    private String uuid;
 
-    public Node(String name, String task, String count, String operatorinfo, String executeinfo) {
+    public Node(String uuid, String name, String task, String count, String operatorinfo, String executeinfo) {
+        this.uuid = uuid;
         this.layer = getRowLayer(name);
         this.name = FormatStringUtils.formatJsonName(name);
         this.info = new Info();
