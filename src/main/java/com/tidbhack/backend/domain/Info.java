@@ -1,9 +1,11 @@
 package com.tidbhack.backend.domain;
 
+import javax.sound.sampled.Line;
+
 /**
  * Created by wenbinsong on 2018/11/30.
  */
-public class Info {
+public class Info extends InfoMap{
     private String task;
     private String count;
     private String operatorinfo;
@@ -40,4 +42,6 @@ public class Info {
     public void setExecuteinfo(String executeinfo) {
         this.executeinfo = executeinfo;
     }
+
+
 }
