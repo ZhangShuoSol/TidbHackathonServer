@@ -9,10 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by wenbinsong on 2018/11/30.
@@ -33,7 +30,7 @@ public class SelectController {
 
     ) {
 
-        Response res = explainService.explain(statement.getSql());
+        Response res = explainService.explain("EXPLAIN ANALYZE " + statement.getSql());
 
         return res;
     }
@@ -46,5 +43,16 @@ public class SelectController {
             @RequestBody Statement statement
     ) {
         return FormatSqlUtils.getFormatSql(statement.getSql());
+    }
+
+    @RequestMapping(value = "/table", method = RequestMethod.GET)
+    @ApiOperation(value = "查找表接口", notes = "查找表接口")
+
+    public String getTable(
+            @ApiParam(value = "表名", required = true)
+            @RequestParam String tablename
+    ) {
+        String result = explainService.getTable(tablename);
+        return result;
     }
 }

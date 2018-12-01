@@ -8,4 +8,6 @@ import com.tidbhack.backend.dto.Response;
  */
 public interface ExplainService {
     Response explain(String sql);
+
+    String getTable(String name);
 }

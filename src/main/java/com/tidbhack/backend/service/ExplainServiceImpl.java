@@ -8,6 +8,8 @@ import com.tidbhack.backend.dto.Response;
 import com.tidbhack.backend.utils.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -24,6 +26,7 @@ public class ExplainServiceImpl implements ExplainService {
 
     @Override
     public Response explain(String sql) {
+        System.out.println(sql);
         List<Explain> explainList = jdbcTemplate.query(sql, new ExplainRowMapper());
 
         ExplainParser explainParser = new ExplainParser();
@@ -69,6 +72,33 @@ public class ExplainServiceImpl implements ExplainService {
         return response;
     }
 
+    @Override
+    public String getTable(String name) {
+
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet("select * from " + name + " limit 0");
+        SqlRowSetMetaData metaData = rowSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+
+        List<Map<String,String>> list = new ArrayList<Map<String, String>>();
+        Map<String,String> fieldMap = new HashMap<String,String>();
+        for (int i = 1; i <= columnCount; i++) {
+            fieldMap.put("ColumnName", metaData.getColumnName(i));
+            fieldMap.put("ColumnType", String.valueOf(metaData.getColumnType(i)));
+            fieldMap.put("ColumnTypeName", metaData.getColumnTypeName(i));
+            fieldMap.put("CatalogName", metaData.getCatalogName(i));
+            fieldMap.put("ColumnClassName", metaData.getColumnClassName(i));
+            fieldMap.put("ColumnLabel", metaData.getColumnLabel(i));
+            fieldMap.put("Precision", String.valueOf(metaData.getPrecision(i)));
+            fieldMap.put("Scale", String.valueOf(metaData.getScale(i)));
+            fieldMap.put("SchemaName", metaData.getSchemaName(i));
+            fieldMap.put("TableName", metaData.getTableName(i));
+            fieldMap.put("SchemaName", metaData.getSchemaName(i));
+            list.add(fieldMap);
+        }
+        Gson gson = new Gson();
+        String result = gson.toJson(list);
+        return result;
+    }
     /**
      * 获取用时最长的叶子结点
      * @param map
