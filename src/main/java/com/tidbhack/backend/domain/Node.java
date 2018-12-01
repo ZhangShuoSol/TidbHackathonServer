@@ -34,8 +34,7 @@ public class Node {
         this.nodes = new ArrayList<Node>();
         //添加格式化后的info信息
         this.info.setExecuteinfoMap(formatStringToMap(executeinfo));
-        //this.info.setOperatorinfoMap(formatStringToMap(formatOperatorinfoToJson(operatorinfo)));
-        this.info.setOperatorinfoMap(null);
+        this.info.setOperatorinfoMap(formatStringToMap(getOperatorTableInfo(operatorinfo)));
     }
 
     public Integer getRowLayer(String name) {
@@ -109,6 +108,16 @@ public class Node {
             map = gson.fromJson(temp.toString(), Map.class);
         }
         return map;
+    }
+
+    private String getOperatorTableInfo(String operatorinfo){
+        String[] infos = operatorinfo.split(",");
+        for(String info:infos){
+            if(info.indexOf("table:")>-1){
+                return info;
+            }
+        }
+        return null;
     }
 
     /**
