@@ -33,7 +33,7 @@ public class SelectController {
 
     ) {
 
-        Response res = explainService.explain(statement.getSql());
+        Response res = explainService.explain("EXPLAIN ANALYZE " + statement.getSql());
 
         return res;
     }
