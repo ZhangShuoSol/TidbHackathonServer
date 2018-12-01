@@ -20,6 +20,7 @@ public class Node {
     private Node parent;
     private Info info;
     private String uuid;
+    private String color;
 
     public Node(String uuid, String name, String task, String count, String operatorinfo, String executeinfo) {
         this.uuid = uuid;
@@ -143,4 +144,11 @@ public class Node {
         this.uuid = uuid;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
 }
