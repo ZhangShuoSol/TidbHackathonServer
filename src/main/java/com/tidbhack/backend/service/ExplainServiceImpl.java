@@ -150,8 +150,22 @@ public class ExplainServiceImpl implements ExplainService {
                 if(child.getUuid().equals(parentId)){
                     child.setColor("red");
                 }
+                if(child.getName().indexOf("TableReader")>-1 && !StringUtils.isEmpty(child.getColor()) && child.getColor().equals("red")){
+                    setTableReaderChildColor(child.getNodes());
+                }
                 recursionFn(child,parentId);
             }
+        }
+    }
+
+    /**
+     * 为标红TableReader子节点默认标红
+     * @param children
+     */
+    private void setTableReaderChildColor(List<Node> children){
+        if(children!=null && children.size()==1){
+            children.get(0).setColor("red");
+            setTableReaderChildColor(children.get(0).getNodes());
         }
     }
 
