@@ -31,23 +31,19 @@ public class ExplainServiceImpl implements ExplainService {
 
         List<QueryResult> queryResults = new ArrayList<QueryResult>();
         for (Explain explain: explainList) {
-            System.out.println(explain.getId());
-            System.out.println(explain.getCount());
-            System.out.println(explain.getTask());
-            System.out.println(explain.getOperator_info());
-            System.out.println(explain.getExecution_info());
             QueryResult queryResult = new QueryResult();
             queryResult.setId(explain.getId());
             queryResult.setCount(explain.getCount());
             queryResult.setTask(explain.getTask());
             queryResult.setOperatorinfo(explain.getOperator_info());
             queryResult.setOperatorinfo(explain.getExecution_info());
+            queryResult.setUuid(explain.getUuid());
             queryResults.add(queryResult);
         }
 
 
         for (Explain explain: explainList) {
-            explainParser.HandleNode(new Node(explain.getId(), explain.getTask(), explain.getCount(), explain.getOperator_info(), explain.getExecution_info() ));
+            explainParser.HandleNode(new Node(explain.getUuid(), explain.getId(), explain.getTask(), explain.getCount(), explain.getOperator_info(), explain.getExecution_info() ));
         }
 
         Response response = new Response();

@@ -1,14 +1,21 @@
 package com.tidbhack.backend.datasource;
 
+import com.tidbhack.backend.utils.UUIDGenerator;
+
 /**
  * Created by wenbinsong on 2018/11/30.
  */
 public class Explain {
+    private String uuid;
     private String id;
     private String count;
     private String task;
     private String operator_info;
     private String execution_info;
+
+    public Explain() {
+        uuid = UUIDGenerator.getUUID32();
+    }
 
     public String getId() {
         return id;
@@ -48,5 +55,13 @@ public class Explain {
 
     public void setExecution_info(String execution_info) {
         this.execution_info = execution_info;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

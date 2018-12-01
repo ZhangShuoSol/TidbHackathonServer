@@ -4,6 +4,7 @@ package com.tidbhack.backend.domain;
  * Created by wenbinsong on 2018/11/30.
  */
 public class QueryResult {
+    private String uuid;
     private String id;
     private String task;
     private String count;
@@ -48,5 +49,13 @@ public class QueryResult {
 
     public void setExecuteinfo(String executeinfo) {
         this.executeinfo = executeinfo;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

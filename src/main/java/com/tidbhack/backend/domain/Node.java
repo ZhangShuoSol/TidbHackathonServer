@@ -19,8 +19,10 @@ public class Node {
     private List<Node> nodes;
     private Node parent;
     private Info info;
+    private String uuid;
 
-    public Node(String name, String task, String count, String operatorinfo, String executeinfo) {
+    public Node(String uuid, String name, String task, String count, String operatorinfo, String executeinfo) {
+        this.uuid = uuid;
         this.layer = getRowLayer(name);
         this.name = FormatStringUtils.formatJsonName(name);
         this.info = new Info();
@@ -94,16 +96,24 @@ public class Node {
      * @param info
      * @return
      */
-    private Map formatStringToMap(String info){
+    private Map formatStringToMap(String info) {
         Map map = new HashMap();
-        if(!StringUtils.isEmpty(info)){
+        if (!StringUtils.isEmpty(info)) {
             StringBuilder temp = new StringBuilder();
             temp.append("{");
-            temp.append(info.substring(1,info.length()));
+            temp.append(info.substring(1, info.length()));
             temp.append("}");
             Gson gson = new Gson();
-            map = gson.fromJson(temp.toString(),Map.class);
+            map = gson.fromJson(temp.toString(), Map.class);
         }
         return map;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }
