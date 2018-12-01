@@ -25,6 +25,7 @@ public class ExplainServiceImpl implements ExplainService {
 
     @Override
     public Response explain(String sql) {
+        System.out.println(sql);
         List<Explain> explainList = jdbcTemplate.query(sql, new ExplainRowMapper());
 
         ExplainParser explainParser = new ExplainParser();

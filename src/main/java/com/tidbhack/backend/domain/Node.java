@@ -32,8 +32,8 @@ public class Node {
         this.info.setExecuteinfo(executeinfo);
         this.nodes = new ArrayList<Node>();
         //添加格式化后的info信息
-        this.info.setExecuteinfoMap(formatStringToMap(executeinfo));
-        this.info.setOperatorinfoMap(formatStringToMap(formatOperatorinfoToJson(operatorinfo)));
+        //this.info.setExecuteinfoMap(formatStringToMap(executeinfo));
+        //this.info.setOperatorinfoMap(formatStringToMap(formatOperatorinfoToJson(operatorinfo)));
     }
 
     public Integer getRowLayer(String name) {
