@@ -33,7 +33,7 @@ public class Node {
         this.nodes = new ArrayList<Node>();
         //添加格式化后的info信息
         this.info.setExecuteinfoMap(formatStringToMap(executeinfo));
-        this.info.setOperatorinfoMap(null);
+        this.info.setOperatorinfoMap(formatStringToMap(formatOperatorinfoToJson(operatorinfo)));
     }
 
     public Integer getRowLayer(String name) {
@@ -101,12 +101,37 @@ public class Node {
         if (!StringUtils.isEmpty(info)) {
             StringBuilder temp = new StringBuilder();
             temp.append("{");
-            temp.append(info.substring(1, info.length()));
+            temp.append(info.substring(0, info.length()));
             temp.append("}");
             Gson gson = new Gson();
             map = gson.fromJson(temp.toString(), Map.class);
         }
         return map;
+    }
+
+    /**
+     * 格式化操作信息为Json
+     * @param operatorinfo
+     * @return
+     */
+    private String formatOperatorinfoToJson(String operatorinfo){
+        StringBuilder sb = new StringBuilder();
+        if(!StringUtils.isEmpty(operatorinfo)){
+            if(operatorinfo.indexOf(",")>-1){
+                String temp = operatorinfo.substring(0,operatorinfo.indexOf(","));
+                if(temp.indexOf(":")<0){
+                    temp = "operate:"+temp+",";
+                    sb.append(temp);
+                    sb.append(operatorinfo.substring(operatorinfo.indexOf(",")+1,operatorinfo.length()));
+                }else{
+                    sb.append(operatorinfo);
+                }
+            }else{
+                sb.append(operatorinfo);
+            }
+
+        }
+        return sb.toString().replace(" ","");
     }
 
     public String getUuid() {
