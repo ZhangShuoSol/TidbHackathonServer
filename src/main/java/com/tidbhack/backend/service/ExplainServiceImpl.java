@@ -54,14 +54,8 @@ public class ExplainServiceImpl implements ExplainService {
 
         ExplainContextInstance explainContextInstance = ExplainContextInstance.getInstance();
         ExplainContext explainContext = new ExplainContext();
-        Node root = explainParser.getRoot();
         //设置用时最长的数据链
-        Map map = new HashMap<>();
-        Map<String,Node> treeMap = new HashMap();
-        buildParentList(map,treeMap,root);
-        String maxId = (String) map.get("maxId");
-        findParent(treeMap,root,maxId);
-
+        Node root = setNodeColor(explainParser.getRoot());
         explainContext.setNode(root);
         //explainContext.setNode(explainParser.getRoot());
         explainContext.setPlan(queryResults);
@@ -78,7 +72,6 @@ public class ExplainServiceImpl implements ExplainService {
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet("select * from " + name + " limit 0");
         SqlRowSetMetaData metaData = rowSet.getMetaData();
         int columnCount = metaData.getColumnCount();
-
         List<Map<String,String>> list = new ArrayList<Map<String, String>>();
         Map<String,String> fieldMap = new HashMap<String,String>();
         for (int i = 1; i <= columnCount; i++) {
@@ -97,7 +90,24 @@ public class ExplainServiceImpl implements ExplainService {
         }
         Gson gson = new Gson();
         String result = gson.toJson(list);
+
         return result;
+    }
+
+    @Override
+    public String getTableIndexs(String name) {
+        List<Map<String, Object>> indexs = jdbcTemplate.queryForList("show index from "+name+";");
+        Gson gson = new Gson();
+        return gson.toJson(indexs);
+    }
+
+    private Node setNodeColor(Node root){
+        Map map = new HashMap<>();
+        Map<String,Node> treeMap = new HashMap();
+        buildParentList(map,treeMap,root);
+        String maxId = (String) map.get("maxId");
+        findParent(treeMap,root,maxId);
+        return root;
     }
     /**
      * 获取用时最长的叶子结点

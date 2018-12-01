@@ -55,4 +55,14 @@ public class SelectController {
         String result = explainService.getTable(tablename);
         return result;
     }
+
+    @RequestMapping(value = "/table/indexs", method = RequestMethod.GET)
+    @ApiOperation(value = "查找表索引接口", notes = "查找表索引接口")
+    public String getTableIndexs(
+            @ApiParam(value = "表名", required = true)
+            @RequestParam String tablename) {
+        String result = explainService.getTableIndexs(tablename);
+        return result;
+    }
+
 }
