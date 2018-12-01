@@ -9,8 +9,9 @@ import java.util.List;
  * Created by wenbinsong on 2018/11/30.
  */
 public class Response {
-    List<QueryResult> plan;
-    Node node;
+    private String uuid;
+    private List<QueryResult> plan;
+    private Node node;
 
     public List<QueryResult> getPlan() {
         return plan;
@@ -26,5 +27,13 @@ public class Response {
 
     public void setNode(Node node) {
         this.node = node;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }
