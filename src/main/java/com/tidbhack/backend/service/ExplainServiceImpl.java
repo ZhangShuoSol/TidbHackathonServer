@@ -183,7 +183,7 @@ public class ExplainServiceImpl implements ExplainService {
         for(String tempTb:tempTbs){
             //获取所有的索引
             List<Map<String, Object>> indexs = jdbcTemplate.queryForList("show index from " + tempTb + ";");
-            if(indexs.size()>5){
+            if(indexs.size()>3){
                 rule3 = false;
             }
             for(Map index:indexs){
