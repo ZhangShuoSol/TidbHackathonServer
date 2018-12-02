@@ -22,4 +22,6 @@ public interface ExplainService {
     String deleteTableIndexs(String table,String columns);
     //获取数据库所有表名
     List<String> getAllTableNames(String dbName);
+
+    String smartAdviseForIndex(String sql);
 }

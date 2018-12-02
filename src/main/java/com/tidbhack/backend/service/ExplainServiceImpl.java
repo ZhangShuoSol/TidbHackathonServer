@@ -109,10 +109,14 @@ public class ExplainServiceImpl implements ExplainService {
         String key1 = "count(*)";
         Integer total = toIntExact((Long)totalmap.get(key1));
 
+        System.out.println("===============");
         System.out.println(count);
         System.out.println(total);
+        System.out.println((float)count / (float)total);
+        System.out.println(String.valueOf((float)count / (float)total));
+        System.out.println("===============");
 
-        return count / total;
+        return (float) count / (float) total;
     }
 
     @Override
@@ -276,6 +280,40 @@ public class ExplainServiceImpl implements ExplainService {
             children.get(0).setColor("red");
             setTableReaderChildColor(children.get(0).getNodes());
         }
+    }
+
+    @Override
+    public String smartAdviseForIndex(String sql) {
+        List<String> advise = new ArrayList<String>();
+
+        advise.add(HandleOperatorSym(sql));
+
+        String result = "";
+        for (String s: advise) {
+            result += s;
+            result += "\n";
+        }
+
+        return result;
+    }
+
+    private String HandleOperatorSym(String sql) {
+        String[] result = sql.split(" ");
+
+        for (int i = 0; i < result.length; i ++) {
+            if (result[i].toLowerCase().equals("where")) {
+                for (int j = i; j < result.length; j ++) {
+                    if (result[j].contains("+") ||
+                            result[j].contains("-") ||
+                            result[i].contains("*") ||
+                            result[i].contains("/")) {
+                        return "where子句中包含运算符，不能命中索引。";
+                    }
+                }
+            }
+        }
+
+        return "";
     }
 
 }

@@ -42,12 +42,20 @@ public class SelectController {
 
     @RequestMapping(value = "/formatsql", method = RequestMethod.POST)
     @ApiOperation(value = "获取格式化后的SQL", notes = "获取格式化后的SQL")
-
     public String formatSql(
             @ApiParam(value = "执行语句", required = true)
             @RequestBody Statement statement
     ) {
         return FormatSqlUtils.getFormatSql(statement.getSql());
+    }
+
+    @RequestMapping(value = "/indexadvise", method = RequestMethod.GET)
+    @ApiOperation(value = "索引建议", notes = "索引建议")
+    public String IndexAdvice(
+            @ApiParam(value = "执行语句", required = true)
+            @RequestParam String sql
+    ) {
+        return explainService.smartAdviseForIndex(sql);
     }
 
     @RequestMapping(value = "/table", method = RequestMethod.GET)
