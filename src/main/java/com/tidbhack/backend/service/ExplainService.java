@@ -20,4 +20,6 @@ public interface ExplainService {
     String addTableIndexs(TableIndex tableIndex);
     //删除表的索引
     String deleteTableIndexs(String table,String columns);
+    //获取数据库所有表名
+    List<String> getAllTableNames(String dbName);
 }
