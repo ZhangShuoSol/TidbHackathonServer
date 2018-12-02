@@ -53,9 +53,9 @@ public class SelectController {
     @ApiOperation(value = "索引建议", notes = "索引建议")
     public String IndexAdvice(
             @ApiParam(value = "执行语句", required = true)
-            @RequestParam String sql
+            @RequestBody Statement statement
     ) {
-        return explainService.smartAdviseForIndex(sql);
+        return explainService.smartAdviseForIndex(statement.getSql());
     }
 
     @RequestMapping(value = "/table", method = RequestMethod.GET)
