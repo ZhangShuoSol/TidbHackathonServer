@@ -174,6 +174,51 @@ public class ExplainServiceImpl implements ExplainService {
         return jdbcTemplate.queryForList("select table_name  from information_schema.tables  where table_schema='"+dbName+"';",String.class);
     }
 
+    private List<String> getRuleBySql(String sql){
+        List<String> messages = new ArrayList<>();
+        //获取所有sql的表名
+        boolean rule1 = true;//true无问题，false有问题
+        boolean rule3 = true;
+        List<String> tempTbs = getTableInSql(sql);
+        for(String tempTb:tempTbs){
+            //获取所有的索引
+            List<Map<String, Object>> indexs = jdbcTemplate.queryForList("show index from " + tempTb + ";");
+            if(indexs.size()>5){
+                rule3 = false;
+            }
+            for(Map index:indexs){
+                String columnName = (String) index.get("Column_name");
+                sql = sql.replace(" ","");
+                if(sql.indexOf(""+columnName+"=")<0 && sql.indexOf(""+columnName+"like")<0 && sql.indexOf(""+columnName+">")<0
+                        && sql.indexOf(""+columnName+"<")<0 && sql.indexOf(""+columnName+"<=")<0 && sql.indexOf(""+columnName+">=")<0){
+                    rule1 = false;
+                }
+            }
+        }
+        if(!rule1){
+            messages.add("适合索引的列是出现在where子句中的列，或者连接子句中指定的列。");
+        }
+        if(!rule3){
+            messages.add("不要过度索引。索引需要额外的磁盘空间，并降低写操作的性能。在修改表内容的时候，索引会进行更新甚至重构，索引列越多，这个时间就会越长。所以只保持需要的索引有利于查询即可。");
+        }
+
+        return messages;
+    }
+
+    private List<String> getTableInSql(String sql){
+        List<String> tempTbs = new ArrayList<>();
+        List<String> tables = jdbcTemplate.queryForList("select table_name  from information_schema.tables  where table_schema='tenant';",String.class);
+        String[] items = sql.split(" ");
+        for(String item:items){
+            for(String table:tables){
+                if(item.equals(table)){
+                    tempTbs.add(table);
+                }
+            }
+        }
+        return tempTbs;
+    }
+
     private Node setNodeColor(Node root){
         Map map = new HashMap<>();
         Map<String,Node> treeMap = new HashMap();
