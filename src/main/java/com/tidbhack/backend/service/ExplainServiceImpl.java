@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import static java.lang.Math.toIntExact;
 
 import java.util.*;
 
@@ -74,10 +75,10 @@ public class ExplainServiceImpl implements ExplainService {
         SqlRowSetMetaData metaData = rowSet.getMetaData();
         int columnCount = metaData.getColumnCount();
         List<Map<String,String>> list = new ArrayList<Map<String, String>>();
-        Map<String,String> fieldMap = new HashMap<String,String>();
         for (int i = 1; i <= columnCount; i++) {
+            Map<String,String> fieldMap = new HashMap<String,String>();
             fieldMap.put("ColumnName", metaData.getColumnName(i));
-            fieldMap.put("ColumnType", String.valueOf(metaData.getColumnType(i)));
+            fieldMap.put("ColumnType", String.valueOf(getColumnBase(name, metaData.getColumnName(i))));
             fieldMap.put("ColumnTypeName", metaData.getColumnTypeName(i));
             fieldMap.put("CatalogName", metaData.getCatalogName(i));
             fieldMap.put("ColumnClassName", metaData.getColumnClassName(i));
@@ -93,6 +94,25 @@ public class ExplainServiceImpl implements ExplainService {
         String result = gson.toJson(list);
 
         return result;
+    }
+
+    public float getColumnBase(String table_name, String column_name) {
+        String sql = "select count(distinct " + column_name + ") from " + table_name + ";";
+        Map<String, Object> countmap = jdbcTemplate.queryForMap(sql);
+        String key = "count(distinct " + column_name + ")";
+        Integer count = toIntExact((Long)countmap.get(key));
+
+
+        String sql1 = "select count(*) from " + table_name + ";";
+        Map<String, Object> totalmap = jdbcTemplate.queryForMap(sql1);
+
+        String key1 = "count(*)";
+        Integer total = toIntExact((Long)totalmap.get(key1));
+
+        System.out.println(count);
+        System.out.println(total);
+
+        return count / total;
     }
 
     @Override
