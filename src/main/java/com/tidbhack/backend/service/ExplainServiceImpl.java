@@ -165,6 +165,11 @@ public class ExplainServiceImpl implements ExplainService {
         return "failure";
     }
 
+    @Override
+    public List<String> getAllTableNames(String dbName) {
+        return jdbcTemplate.queryForList("select table_name  from information_schema.tables  where table_schema='"+dbName+"';",String.class);
+    }
+
     private Node setNodeColor(Node root){
         Map map = new HashMap<>();
         Map<String,Node> treeMap = new HashMap();

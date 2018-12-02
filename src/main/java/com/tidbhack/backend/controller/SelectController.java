@@ -84,4 +84,12 @@ public class SelectController {
         return result;
     }
 
+    @RequestMapping(value = "table/names", method = RequestMethod.GET)
+    @ApiOperation(value = "查找表索引接口", notes = "查找表索引接口")
+    public String getAllTableNames() {
+        List<String> result = explainService.getAllTableNames("tenant");
+        Gson gson = new Gson();
+        return gson.toJson(result);
+    }
+
 }
