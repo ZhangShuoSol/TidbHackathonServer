@@ -331,17 +331,20 @@ public class ExplainServiceImpl implements ExplainService {
     public String smartAdviseForIndex(String sql) {
         List<String> advise = new ArrayList<String>();
 
-        advise.add(HandleOperatorSym(sql));
-
-        List<String> list = getRuleBySql(sql);
-        String result = "";
-        for (String s: advise) {
-            result += s;
-            result += "\n";
+        if (!HandleOperatorSym(sql).equals("")) {
+            advise.add(HandleOperatorSym(sql));
         }
 
+        List<String> list = getRuleBySql(sql);
+
         for (String s : list) {
-            result += s;
+            advise.add(s);
+        }
+
+        String result = "索引专家建议\n";
+        for (Integer i = 1; i < advise.size() + 1; i ++) {
+            result += i.toString() + ". ";
+            result += advise.get(i - 1);
             result += "\n";
         }
 
