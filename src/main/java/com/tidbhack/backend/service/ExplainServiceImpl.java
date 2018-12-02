@@ -211,7 +211,7 @@ public class ExplainServiceImpl implements ExplainService {
         String[] items = sql.split(" ");
         for(String item:items){
             for(String table:tables){
-                if(item.equals(table)){
+                if(item.equals(table) || item.replace(";","").equals(table)){
                     tempTbs.add(table);
                 }
             }
