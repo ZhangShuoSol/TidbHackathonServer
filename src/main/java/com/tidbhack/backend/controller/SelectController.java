@@ -1,8 +1,10 @@
 package com.tidbhack.backend.controller;
 
+import com.google.gson.Gson;
 import com.tidbhack.backend.domain.Node;
 import com.tidbhack.backend.dto.Response;
 import com.tidbhack.backend.dto.Statement;
+import com.tidbhack.backend.dto.TableIndex;
 import com.tidbhack.backend.service.ExplainService;
 import com.tidbhack.backend.utils.FormatSqlUtils;
 import io.swagger.annotations.Api;
@@ -10,6 +12,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wenbinsong on 2018/11/30.
@@ -58,10 +63,24 @@ public class SelectController {
 
     @RequestMapping(value = "/table/indexs", method = RequestMethod.GET)
     @ApiOperation(value = "查找表索引接口", notes = "查找表索引接口")
-    public String getTableIndexs(
-            @ApiParam(value = "表名", required = true)
-            @RequestParam String tablename) {
-        String result = explainService.getTableIndexs(tablename);
+    public String getTableIndexs( @ApiParam(value = "表名", required = true) @RequestParam String tablename) {
+        List<Map<String, Object>> result = explainService.getTableIndexs(tablename);
+        Gson gson = new Gson();
+        return gson.toJson(result);
+    }
+
+    @RequestMapping(value = "/table/indexs", method = RequestMethod.POST)
+    @ApiOperation(value = "添加表索引接口", notes = "添加表索引接口")
+    public String addTableIndexs(@ApiParam(value = "表名", required = true) @RequestBody TableIndex tableIndex) {
+        String result = explainService.addTableIndexs(tableIndex);
+        return result;
+    }
+
+    @RequestMapping(value = "/table/indexs", method = RequestMethod.DELETE)
+    @ApiOperation(value = "删除表索引接口", notes = "删除表索引接口")
+    public String deleteTableIndexs(@ApiParam(value = "表名", required = true) @RequestParam String table,
+                                    @ApiParam(value = "列名", required = true) @RequestParam String columns) {
+        String result = explainService.deleteTableIndexs(table,columns);
         return result;
     }
 

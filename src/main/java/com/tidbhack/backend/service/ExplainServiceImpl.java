@@ -5,6 +5,7 @@ import com.tidbhack.backend.datasource.Explain;
 import com.tidbhack.backend.datasource.ExplainRowMapper;
 import com.tidbhack.backend.domain.*;
 import com.tidbhack.backend.dto.Response;
+import com.tidbhack.backend.dto.TableIndex;
 import com.tidbhack.backend.utils.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -95,10 +96,53 @@ public class ExplainServiceImpl implements ExplainService {
     }
 
     @Override
-    public String getTableIndexs(String name) {
-        List<Map<String, Object>> indexs = jdbcTemplate.queryForList("show index from "+name+";");
-        Gson gson = new Gson();
-        return gson.toJson(indexs);
+    public List<Map<String, Object>> getTableIndexs(String name) {
+        return jdbcTemplate.queryForList("show index from "+name+";");
+    }
+
+    @Override
+    public String addTableIndexs(TableIndex tableIndex) {
+        String table = tableIndex.getTable();
+        String columns = tableIndex.getColumns();
+        if(!StringUtils.isEmpty(table) && !StringUtils.isEmpty(columns)){
+            List<Map<String, Object>> indexs = getTableIndexs(table);
+            String[] cs = columns.split(",");
+            for(String column:cs){
+                String indexName = "index_"+column;
+                //检查索引中是否有当前要加的索引
+                if(!checkHasIndex(indexs,indexName)){
+                    jdbcTemplate.execute("alter table "+table+" add index "+indexName+" ("+columns+") ;");
+                }
+            }
+            return "success";
+        }
+        return "failure";
+    }
+
+    private boolean checkHasIndex(List<Map<String, Object>> indexs,String indexName){
+        boolean has = false;
+        if(indexs.size()>0){
+            for(Map map:indexs){
+                if(map.get("Key_name").equals(indexName)){
+                    has = true;
+                    break;
+                }
+            }
+        }
+        return has;
+    }
+
+    @Override
+    public String deleteTableIndexs(String table, String columns) {
+        if(!StringUtils.isEmpty(table) && !StringUtils.isEmpty(columns)){
+            String[] cs = columns.split(",");
+            for(String column:cs){
+                String indexName = "index_"+column;
+                jdbcTemplate.execute("drop index "+indexName+" on "+table+" ;");
+            }
+            return "success";
+        }
+        return "failure";
     }
 
     private Node setNodeColor(Node root){
