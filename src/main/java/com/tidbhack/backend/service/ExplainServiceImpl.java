@@ -179,19 +179,26 @@ public class ExplainServiceImpl implements ExplainService {
         //获取所有sql的表名
         boolean rule1 = true;//true无问题，false有问题
         boolean rule3 = true;
-        List<String> tempTbs = getTableInSql(sql);
-        for(String tempTb:tempTbs){
-            //获取所有的索引
-            List<Map<String, Object>> indexs = jdbcTemplate.queryForList("show index from " + tempTb + ";");
-            if(indexs.size()>3){
-                rule3 = false;
+        boolean rule6 = true;
+        if(!StringUtils.isEmpty(sql)){
+            if(sql.toLowerCase().indexOf("like '%")>-1 ||
+                    sql.toLowerCase().replace(" ","").indexOf("like'%")>-1){
+                rule6 = false;
             }
-            for(Map index:indexs){
-                String columnName = (String) index.get("Column_name");
-                sql = sql.replace(" ","");
-                if(sql.indexOf(""+columnName+"=")<0 && sql.indexOf(""+columnName+"like")<0 && sql.indexOf(""+columnName+">")<0
-                        && sql.indexOf(""+columnName+"<")<0 && sql.indexOf(""+columnName+"<=")<0 && sql.indexOf(""+columnName+">=")<0){
-                    rule1 = false;
+            List<String> tempTbs = getTableInSql(sql);
+            for(String tempTb:tempTbs){
+                //获取所有的索引
+                List<Map<String, Object>> indexs = jdbcTemplate.queryForList("show index from " + tempTb + ";");
+                if(indexs.size()>3){
+                    rule3 = false;
+                }
+                for(Map index:indexs){
+                    String columnName = (String) index.get("Column_name");
+                    sql = sql.replace(" ","");
+                    if(sql.indexOf(""+columnName+"=")<0 && sql.indexOf(""+columnName+"like")<0 && sql.indexOf(""+columnName+">")<0
+                            && sql.indexOf(""+columnName+"<")<0 && sql.indexOf(""+columnName+"<=")<0 && sql.indexOf(""+columnName+">=")<0){
+                        rule1 = false;
+                    }
                 }
             }
         }
@@ -200,6 +207,9 @@ public class ExplainServiceImpl implements ExplainService {
         }
         if(!rule3){
             messages.add("不要过度索引。索引需要额外的磁盘空间，并降低写操作的性能。在修改表内容的时候，索引会进行更新甚至重构，索引列越多，这个时间就会越长。所以只保持需要的索引有利于查询即可。");
+        }
+        if(!rule6){
+            messages.add("前导模糊查询不能命中索引。");
         }
 
         return messages;
