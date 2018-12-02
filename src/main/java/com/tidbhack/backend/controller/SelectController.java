@@ -50,7 +50,7 @@ public class SelectController {
         return FormatSqlUtils.getFormatSql(statement.getSql());
     }
 
-    @RequestMapping(value = "/indexadvise", method = RequestMethod.GET)
+    @RequestMapping(value = "/indexadvise", method = RequestMethod.POST)
     @ApiOperation(value = "索引建议", notes = "索引建议")
     public String IndexAdvice(
             @ApiParam(value = "执行语句", required = true)

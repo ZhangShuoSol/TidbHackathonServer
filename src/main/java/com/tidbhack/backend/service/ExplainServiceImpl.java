@@ -333,8 +333,14 @@ public class ExplainServiceImpl implements ExplainService {
 
         advise.add(HandleOperatorSym(sql));
 
+        List<String> list = getRuleBySql(sql);
         String result = "";
         for (String s: advise) {
+            result += s;
+            result += "\n";
+        }
+
+        for (String s : list) {
             result += s;
             result += "\n";
         }
